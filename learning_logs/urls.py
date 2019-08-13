@@ -11,5 +11,7 @@ urlpatterns = [
     # Домашняя страница
     path('', views.index, name='index'),  # (регулярное выражение, url, index)
     # Вывод всех тем
-    path('topics', views.topics, name='topics')
+    path('topics', views.topics, name='topics'),
+    # Страница с подробной информацией, по отдельной теме
+    path(r'^topics/(?P<topic_id>\d+)/$', views.topic, name='topic'),
 ]
