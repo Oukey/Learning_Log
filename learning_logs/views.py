@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from .models import Topic
-from .forms import TopicForm
+from .forms import TopicForm, EntryForm
 
 
 def index(request):
@@ -34,12 +34,30 @@ def new_topic(request):
         form = TopicForm()
     else:
         # Отправлены данные POST; обработать данные
-        form = TopicForm(request.POST)
+        form = TopicForm(data=request.POST)
         if form.is_valid():  # Прверка отправленной информации
             form.save()
             # new_topic = form.save(commit=False)
             # new_topic.owner = request.user
             # new_topic.save()  # Запись информации из формы в базу данных
-            return HttpResponseRedirect(reverse('learning_logs:topics'))  # возврат на страницу topics
+            return HttpResponseRedirect(reverse('learning_logs:topics.html'))  # возврат на страницу topics
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
+
+def new_entry(request, topic_id):
+    '''Добавляет новую запись по конкретной теме'''
+    topic = Topic.objects.get(id=topic_id)
+
+    if request.method != 'POST':
+        # Данные не отправлялись; создается пустая форма
+        form = EntryForm()
+    else:
+        # Отправлены данные POST; обработать данные
+        form = EntryForm(data=request.POST)
+        if form.is_valid():
+            naw_entry = form.save(commit=False)
+            new_entry.topic = topic
+            new_entry.save()
+            return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic_id]))
+    context = {'topic': topic, 'form': form}
+    return render(request, 'learning_logs/new_entry.html', context)
