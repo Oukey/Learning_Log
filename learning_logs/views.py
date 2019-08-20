@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect as HRR
 from django.urls import reverse
 
 from .models import Topic
-from .forms import TopicForm
+from .forms import TopicForm, EntryForm
 
 
 def index(request):
@@ -39,3 +39,21 @@ def new_topic(request):
             return HRR(reverse('learning_logs:topics'))
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
+
+
+def new_entry(request, topic_id):
+    '''Добавляет новую запись по конкретной теме'''
+    topic = Topic.objects.get(id=topic_id)
+    if request.method != 'POST':
+        # Данные не отправлялись; создается пустая форма
+        form = EntryForm()
+    else:
+        # Отправлены данные POST; обработать данные
+        form = EntryForm(data=request.POST)
+        if form.is_valid():
+            new_entry = form.save(commit=False)
+            new_entry.topic = topic
+            new_entry.save()
+            return HRR(reverse('learning_logs:topic', args=[topic_id]))
+    context = {'topic': topic, 'form': form}
+    return render(request, 'learning_logs/new_entry.html', context)
