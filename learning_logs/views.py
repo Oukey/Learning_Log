@@ -1,9 +1,15 @@
 from django.shortcuts import render
-from . models import Topic
+from django.http import HttpResponseRedirect as HRR
+from django.urls import reverse
+
+from .models import Topic
+from .forms import TopicForm
+
 
 def index(request):
     '''Домашняя страница приложения Learning_log'''
     return render(request, 'learning_logs/index.html')
+
 
 def topics(request):
     '''Выводит список тем'''
@@ -11,9 +17,25 @@ def topics(request):
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
 
+
 def topic(request, topic_id):
     '''Выводит одну тему и все её записи'''
     topic = Topic.objects.get(id=topic_id)  # Запрос к БД
     entries = topic.entry_set.order_by('-date_added')  # Запрос к БД, '-date_added' сортирует id в обратом порядке
     context = {'topic': topic, 'entries': entries}
     return render(request, 'learning_logs/topic.html', context)
+
+
+def new_topic(request):
+    '''Определяет новую тему'''
+    if request.method != 'POST':
+        # ДАнные не отпрпвляются; создается пустая форма
+        form = TopicForm()
+    else:
+        # Отправлены данные POST; обработать данные
+        form = TopicForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HRR(reverse('learning_logs:topics'))
+    context = {'form': form}
+    return render(request, 'learning_logs/new_topic.html', context)

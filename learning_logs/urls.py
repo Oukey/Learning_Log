@@ -2,7 +2,7 @@
 '''Определяет схемы URL для learning_logs'''
 
 # from django.conf.urls import url
-from django.urls import path, include, re_path
+from django.urls import path
 from . import views
 
 app_name = 'learning_logs'
@@ -16,5 +16,8 @@ urlpatterns = [
 
     # Страница с подробной информацией, по отдельной теме
     path('topics/<int:topic_id>/', views.topic, name='topic'),
+
+    # Страница для добавления новой темы
+    path('new_topic/', views.new_topic, name='new_topic'),
 
 ]
