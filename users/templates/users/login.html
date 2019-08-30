@@ -8,10 +8,10 @@
   {% if form.errors %}
     <p>Your username and password didn't match. Pleas try again.</p>
   {% endif %}
-  <from method="post" action="{% url 'users:login' %}" class="form">
+  <form method="post" action="{% url 'users:login' %}" class="form">
       {% csrf_token %}
       {{ form.as_p }}
       <button name="submit">log in</button>
       <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
-  </from>
+  </form>
 {% endblock content %}
