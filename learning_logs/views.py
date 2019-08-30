@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
-
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
 def index(request):
@@ -72,7 +72,8 @@ def edit_entry(request, entry_id):
         form = EntryForm(instance=entry, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('learning_logs:topic', topic_id=topic.id)
+            # return redirect('learning_logs:topic', topic_id=[topic.id])
+            return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic.id]))
         context = {'entry': entry, 'topic': topic, 'form': form}
         return render(request, 'learning_logs/edit_entry.html', context)
 
