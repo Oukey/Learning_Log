@@ -65,6 +65,7 @@ def new_entry(request, topic_id):
     return render(request, 'learning_logs/new_entry.html', context)
 
 
+@login_required
 def edit_entry(request, entry_id):
     '''Редактирует существующую запись'''
     entry = Entry.objects.get(id=entry_id)
