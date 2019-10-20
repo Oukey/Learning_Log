@@ -4,7 +4,7 @@
 {% endblock header %}
 {% block content %}
   <p>
-    <a href="{% url 'learning_logs:new_entry' topic.id %}">add new entry</a>
+    <a href="{% url 'learning_logs:new_entry' topic.id %}">Add new entry</a>
   </p>
   {% for entry in entries %}
     <div class="panel panel-default">
